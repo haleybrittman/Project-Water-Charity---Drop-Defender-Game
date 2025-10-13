@@ -38,7 +38,7 @@ body {
 
 /* keep button visuals inside the white box */
 .content-box button {
-  background-color: #ffcc00;
+  background-color: rgb(255, 201, 7);
   color: #000;
 }
 
@@ -92,7 +92,7 @@ body {
 
 /* --- BUTTONS --- */
 button {
-  background-color: #ffcc00;
+  background-color: rgb(255, 201, 7);
   color: #000;
   border: none;
   padding: 15px 30px;
@@ -115,7 +115,7 @@ button:hover {
 
 /* --- GAME AREA --- */
 #game-container {
-  background: #2b89e7;
+  background: rgb(119, 168, 187);
   position: relative;
 }
 
@@ -131,7 +131,7 @@ canvas {
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: #ffc400;
+  background-color: rgb(255, 201, 7)
   padding: 10px 18px;
   border-radius: 10px;
   z-index: 2;
