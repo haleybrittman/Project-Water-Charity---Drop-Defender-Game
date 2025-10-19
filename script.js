@@ -68,22 +68,49 @@ function update() {
 
   drops.forEach((drop, i) => {
     drop.y += 3; // fall speed
+
     // check collision with player
     if (
       drop.y + drop.radius > player.y &&
       drop.x > player.x &&
       drop.x < player.x + player.width
     ) {
-      // caught!
-      score++;
-      updateScore();
+      if (drop.isPollutant) {
+        // 😷 caught a pollutant — lose life
+        lives--;
+        updateLives();
+        flashCanvas("rgba(255, 50, 50, 0.4)"); // red flash for bad
+        if (lives <= 0) {
+          endGame();
+          return;
+        }
+      } else {
+        // 💧 caught clean water — gain score
+        score++;
+        updateScore();
+        flashCanvas("rgba(50, 255, 50, 0.4)"); // green flash for good
+      }
+
+      // remove caught drop and create new one
       drops.splice(i, 1);
-      createDrop(); // add a new one
+      createDrop();
     }
+
     // missed drop
     if (drop.y > canvas.height) {
       drops.splice(i, 1);
       createDrop();
+
+      // lose life only if missed clean water
+      if (!drop.isPollutant) {
+        lives--;
+        updateLives();
+        flashCanvas("rgba(255, 50, 50, 0.4)");
+        if (lives <= 0) {
+          endGame();
+          return;
+        }
+      }
     }
   });
 
