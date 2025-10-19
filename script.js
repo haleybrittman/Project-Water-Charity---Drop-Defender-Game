@@ -29,8 +29,21 @@ gameContainer.appendChild(scoreDisplay);
 // 💧 CREATE RANDOM DROPS
 function createDrop() {
   const x = Math.random() * (canvas.width - 20);
-  drops.push({ x, y: 0, radius: 10, color: "#00bfff" }); // blue = clean water
+  
+  // 70% chance for clean water, 30% for pollutant
+  const isPollutant = Math.random() < 0.3;
+  
+  const drop = {
+    x,
+    y: 0,
+    radius: 10,
+    isPollutant: isPollutant,
+    color: isPollutant ? "#6b4f4f" : "#00bfff" // brown for pollutant, blue for water
+  };
+
+  drops.push(drop);
 }
+
 
 // ✨ DRAW PLAYER + DROPS
 function draw() {
