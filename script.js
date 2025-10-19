@@ -26,6 +26,14 @@ scoreDisplay.id = "score-display";
 scoreDisplay.textContent = `Score: ${score}`;
 gameContainer.appendChild(scoreDisplay);
 
+// 🧡 SETUP LIVES DISPLAY
+let lives = 4;
+const livesDisplay = document.createElement("div");
+livesDisplay.id = "lives-display";
+livesDisplay.textContent = `Lives: ${lives}`;
+gameContainer.appendChild(livesDisplay);
+
+
 // 💧 CREATE RANDOM DROPS
 function createDrop() {
   const x = Math.random() * (canvas.width - 20);
@@ -101,7 +109,7 @@ function update() {
       drops.splice(i, 1);
       createDrop();
 
-      // lose life only if missed clean water
+      // lose a life only if it was clean water
       if (!drop.isPollutant) {
         lives--;
         updateLives();
@@ -112,11 +120,22 @@ function update() {
         }
       }
     }
+
   });
 
   draw();
   requestAnimationFrame(update);
 }
+
+
+
+// ⚡ FLASH EFFECT FOR FEEDBACK
+function flashCanvas(color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  setTimeout(draw, 100);
+}
+
 
 // 💥 UPDATE SCORE + FEEDBACK
 function updateScore() {
@@ -130,6 +149,24 @@ function updateScore() {
     scoreDisplay.style.color = "#fff";
   }, 200);
 }
+
+
+// ❤️ UPDATE LIVES DISPLAY
+function updateLives() {
+  livesDisplay.textContent = `Lives: ${lives}`;
+  livesDisplay.classList.add("lives-flash");
+  setTimeout(() => livesDisplay.classList.remove("lives-flash"), 200);
+}
+
+// 💀 END GAME
+function endGame() {
+  isPlaying = false;
+  gameContainer.classList.remove("active");
+  gameOver.classList.add("active");
+}
+
+
+
 
 // 🕹️ MOVE PLAYER
 document.addEventListener("keydown", (e) => {
@@ -164,6 +201,8 @@ playAgainBtn.addEventListener("click", restartGame);
 function startGame() {
   isPlaying = true;
   score = 0;
+  lives = 4;
+  updateLives();
   updateScore();
   drops = [];
   for (let i = 0; i < 3; i++) createDrop();

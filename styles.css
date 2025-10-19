@@ -263,6 +263,25 @@ canvas {
   transition: transform 0.1s ease;
 }
 
+/* --- LIVES DISPLAY --- */
+#lives-display {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: transform 0.1s ease;
+}
+
+.lives-flash {
+  transform: scale(1.3);
+  color: #ff4d4d;
+}
+
 .score-bounce {
   transform: scale(1.3);
 }
