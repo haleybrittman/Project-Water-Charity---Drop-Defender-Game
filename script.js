@@ -26,32 +26,11 @@ scoreDisplay.id = "score-display";
 scoreDisplay.textContent = `Score: ${score}`;
 gameContainer.appendChild(scoreDisplay);
 
-// 🧡 SETUP LIVES DISPLAY
-let lives = 4;
-const livesDisplay = document.createElement("div");
-livesDisplay.id = "lives-display";
-livesDisplay.textContent = `Lives: ${lives}`;
-gameContainer.appendChild(livesDisplay);
-
-
 // 💧 CREATE RANDOM DROPS
 function createDrop() {
   const x = Math.random() * (canvas.width - 20);
-  
-  // 70% chance for clean water, 30% for pollutant
-  const isPollutant = Math.random() < 0.3;
-  
-  const drop = {
-    x,
-    y: 0,
-    radius: 10,
-    isPollutant: isPollutant,
-    color: isPollutant ? "#6b4f4f" : "#00bfff" // brown for pollutant, blue for water
-  };
-
-  drops.push(drop);
+  drops.push({ x, y: 0, radius: 10, color: "#00bfff" }); // blue = clean water
 }
-
 
 // ✨ DRAW PLAYER + DROPS
 function draw() {
@@ -76,66 +55,28 @@ function update() {
 
   drops.forEach((drop, i) => {
     drop.y += 3; // fall speed
-
     // check collision with player
     if (
       drop.y + drop.radius > player.y &&
       drop.x > player.x &&
       drop.x < player.x + player.width
     ) {
-      if (drop.isPollutant) {
-        // 😷 caught a pollutant — lose life
-        lives--;
-        updateLives();
-        flashCanvas("rgba(255, 50, 50, 0.4)"); // red flash for bad
-        if (lives <= 0) {
-          endGame();
-          return;
-        }
-      } else {
-        // 💧 caught clean water — gain score
-        score++;
-        updateScore();
-        flashCanvas("rgba(50, 255, 50, 0.4)"); // green flash for good
-      }
-
-      // remove caught drop and create new one
+      // caught!
+      score++;
+      updateScore();
       drops.splice(i, 1);
-      createDrop();
+      createDrop(); // add a new one
     }
-
     // missed drop
     if (drop.y > canvas.height) {
       drops.splice(i, 1);
       createDrop();
-
-      // lose a life only if it was clean water
-      if (!drop.isPollutant) {
-        lives--;
-        updateLives();
-        flashCanvas("rgba(255, 50, 50, 0.4)");
-        if (lives <= 0) {
-          endGame();
-          return;
-        }
-      }
     }
-
   });
 
   draw();
   requestAnimationFrame(update);
 }
-
-
-
-// ⚡ FLASH EFFECT FOR FEEDBACK
-function flashCanvas(color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  setTimeout(draw, 100);
-}
-
 
 // 💥 UPDATE SCORE + FEEDBACK
 function updateScore() {
@@ -149,24 +90,6 @@ function updateScore() {
     scoreDisplay.style.color = "#fff";
   }, 200);
 }
-
-
-// ❤️ UPDATE LIVES DISPLAY
-function updateLives() {
-  livesDisplay.textContent = `Lives: ${lives}`;
-  livesDisplay.classList.add("lives-flash");
-  setTimeout(() => livesDisplay.classList.remove("lives-flash"), 200);
-}
-
-// 💀 END GAME
-function endGame() {
-  isPlaying = false;
-  gameContainer.classList.remove("active");
-  gameOver.classList.add("active");
-}
-
-
-
 
 // 🕹️ MOVE PLAYER
 document.addEventListener("keydown", (e) => {
@@ -201,8 +124,6 @@ playAgainBtn.addEventListener("click", restartGame);
 function startGame() {
   isPlaying = true;
   score = 0;
-  lives = 4;
-  updateLives();
   updateScore();
   drops = [];
   for (let i = 0; i < 3; i++) createDrop();
